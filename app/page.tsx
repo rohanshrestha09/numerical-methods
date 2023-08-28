@@ -16,24 +16,29 @@ export default function Home() {
 
   const calculateBisection = (values: {
     fx: string;
-    x0: string;
-    x1: string;
+    x0?: string;
+    x1?: string;
     error: number;
   }) => {
     const bisectionMethod = new BisectionMethod(values.fx, values.error);
 
     try {
-      const result = bisectionMethod.findRoots(
-        parseFloat(values.x0),
-        parseFloat(values.x1),
-      );
+      const result =
+        values.x0 && values.x1
+          ? bisectionMethod.findRoots(
+              parseFloat(values.x0),
+              parseFloat(values.x1),
+            )
+          : bisectionMethod.findRoots(20);
 
       setBisectionMethodResult({
-        x0: parseFloat(values.x0),
-        x1: parseFloat(values.x1),
+        x0: result.x0,
+        x1: result.x1,
         root: result.root,
         error: result.error,
       });
+
+      return result;
     } catch (err) {
       if (err instanceof Error) message.error(err.message);
     }
@@ -52,19 +57,35 @@ export default function Home() {
           layout="vertical"
           onFinish={calculateBisection}
         >
-          <Form.Item label="Enter equation" name="fx">
+          <Form.Item
+            label="Enter equation"
+            name="fx"
+            rules={[{ required: true, message: "Equation is required" }]}
+          >
             <Input placeholder="Eg: 3x + sin(x) - e^x" size="large" />
           </Form.Item>
 
-          <Form.Item label="Precision:" name="error">
+          <Form.Item
+            label="Precision:"
+            name="error"
+            rules={[{ required: true, message: "Precision is required" }]}
+          >
             <Input type="number" placeholder="Enter precision" size="large" />
           </Form.Item>
 
-          <Form.Item label="First guess:" name="x0">
+          <Form.Item
+            label="First guess:"
+            name="x0"
+            rules={[{ required: true, message: "Initial guess is required" }]}
+          >
             <Input type="number" placeholder="Enter first guess" size="large" />
           </Form.Item>
 
-          <Form.Item label="Second guess:" name="x1">
+          <Form.Item
+            label="Second guess:"
+            name="x1"
+            rules={[{ required: true, message: "Initial guess is required" }]}
+          >
             <Input
               type="number"
               placeholder="Enter second guess"
@@ -72,16 +93,34 @@ export default function Home() {
             />
           </Form.Item>
 
-          <Form.Item>
-            <Button
-              className="bg-[#1677ff]"
-              size="large"
-              htmlType="submit"
-              type="primary"
-            >
-              Calculate
-            </Button>
-          </Form.Item>
+          <div className="flex gap-6">
+            <Form.Item className="sm:flex-none flex-1">
+              <Button
+                className="bg-[#1677ff] sm:w-auto w-full"
+                size="large"
+                htmlType="submit"
+                type="primary"
+              >
+                Calculate
+              </Button>
+            </Form.Item>
+
+            <Form.Item className="flex-1 sm:flex-none">
+              <Button
+                className="sm:w-auto w-full"
+                size="large"
+                onClick={() => {
+                  form.validateFields(["fx", "error"]);
+
+                  const result = calculateBisection(form.getFieldsValue());
+
+                  form.setFieldsValue(result);
+                }}
+              >
+                Randomise Guessing
+              </Button>
+            </Form.Item>
+          </div>
 
           <Form.Item className="col-span-full">
             <div className="flex gap-10 flex-wrap text-lg">
