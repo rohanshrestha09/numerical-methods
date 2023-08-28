@@ -40,14 +40,14 @@ export default function Home() {
   };
 
   return (
-    <main className="bg-white p-10">
+    <main className="bg-white sm:p-10 p-6">
       <div className="flex flex-col gap-4">
         <p className="text-lg">
           Bracketing Method (Bisection, False Position (Regula Falsi))
         </p>
 
         <Form
-          className="grid grid-cols-2 gap-x-10"
+          className="grid sm:grid-cols-2 grid-cols-1 gap-x-10"
           form={form}
           layout="vertical"
           onFinish={calculateBisection}
@@ -84,7 +84,7 @@ export default function Home() {
           </Form.Item>
 
           <Form.Item className="col-span-full">
-            <div className="flex gap-10 text-lg">
+            <div className="flex gap-10 flex-wrap text-lg">
               <p>x0: {bisectionMethodResult.x0}</p>
               <p>x1: {bisectionMethodResult.x1}</p>
               <p>Root: {bisectionMethodResult.root}</p>
