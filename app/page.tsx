@@ -29,7 +29,7 @@ export default function Home() {
               parseFloat(values.x0),
               parseFloat(values.x1),
             )
-          : bisectionMethod.findRoots(20);
+          : bisectionMethod.findRoots(10);
 
       setBisectionMethodResult({
         x0: result.x0,
@@ -110,11 +110,11 @@ export default function Home() {
                 className="sm:w-auto w-full"
                 size="large"
                 onClick={() => {
-                  form.validateFields(["fx", "error"]);
+                  form.validateFields(["fx", "error"]).then((values) => {
+                    const result = calculateBisection(values);
 
-                  const result = calculateBisection(form.getFieldsValue());
-
-                  form.setFieldsValue(result);
+                    form.setFieldsValue(result);
+                  });
                 }}
               >
                 Randomise Guessing
